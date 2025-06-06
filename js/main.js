@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     let editingIndex = null;
-    let currentAccess = 'lista'; // 'cadastro', 'lista', ou 'solicitacoes'
+    let currentAccess = 'lista';
     let currentPage = 1;
     const itemsPerPage = 30;
     let sortField = 'code';
@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (confirm('Tem certeza que deseja excluir todos os materiais?')) {
                 localStorageUtils.saveMaterials([]);
                 renderMaterials();
+                showToastMessage('Todos os materiais foram excluídos!', 'success');
             }
         });
     }
@@ -148,11 +149,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 materials = materials.filter(m => !/inativo/i.test(m.name));
                 localStorageUtils.saveMaterials(materials);
                 renderMaterials();
+                showToastMessage('Materiais inativos excluídos!', 'success');
             }
         });
     }
 
-    // Funções de manipulação de materiais
     const localStorageUtils = {
         getMaterials: () => JSON.parse(localStorage.getItem('materials') || '[]'),
         saveMaterials: (materials) => localStorage.setItem('materials', JSON.stringify(materials)),
@@ -173,13 +174,28 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     };
 
-    // Adicionar material
+    function showToastMessage(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = `show-toast ${type}`;
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-30px)';
+        }, 2200);
+    }
+
     if (selectors.materialForm) {
         selectors.materialForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const code = selectors.materialCode.value.trim();
             const name = selectors.materialName.value.trim();
-            if (!code || !name) return;
+            if (!code || !name) {
+                showToastMessage('Preencha todos os campos!', 'error');
+                return;
+            }
             localStorageUtils.addMaterial({
                 id: Date.now() + Math.random(),
                 code,
@@ -188,7 +204,9 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             selectors.materialCode.value = '';
             selectors.materialName.value = '';
+            selectors.materialCode.focus();
             renderMaterials();
+            showToastMessage('Material adicionado com sucesso!', 'success');
         });
     }
 
@@ -206,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Atualiza a visualização com base no acesso atual
+    
     function updateView() {
         selectors.materialRegistration.style.display = currentAccess === 'cadastro' ? 'block' : 'none';
         selectors.materialList.style.display = 'block';
@@ -214,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderMaterials();
     }
 
-    // Inicialização do app após login
+  
     function initApp() {
         updateMaterialsCount();
         updateView();
@@ -234,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Atualiza o contador de materiais
+    
     function updateMaterialsCount() {
         if (selectors.materialsCount) {
             const materials = localStorageUtils.getMaterials();
@@ -242,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Renderiza materiais com paginação e ordenação
+   
     function renderMaterials() {
         let materials = localStorageUtils.getMaterials();
         const search = selectors.searchInput.value.trim().toLowerCase();
@@ -301,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Edição
+    
     window.editMaterial = function(index) {
         editingIndex = index;
         renderMaterials();
@@ -314,6 +332,9 @@ document.addEventListener('DOMContentLoaded', function () {
             materials[index].code = code;
             materials[index].name = name;
             localStorageUtils.saveMaterials(materials);
+            showToastMessage('Material editado com sucesso!', 'success');
+        } else {
+            showToastMessage('Preencha todos os campos!', 'error');
         }
         editingIndex = null;
         renderMaterials();
@@ -327,11 +348,12 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorageUtils.deleteMaterial(index);
             editingIndex = null;
             renderMaterials();
+            showToastMessage('Material excluído com sucesso!', 'success');
         }
     };
     window.copyCode = function(code) {
         navigator.clipboard.writeText(code);
-        showToast('Código copiado!');
+        showToastMessage('Código copiado!', 'success');
     };
 
     function renderEditingRow(mat, realIndex) {
@@ -376,13 +398,6 @@ document.addEventListener('DOMContentLoaded', function () {
         selectors.nextPageBtn.style.display = currentPage < totalPages ? '' : 'none';
     }
 
-    function showToast(msg) {
-        selectors.toast.textContent = msg;
-        selectors.toast.classList.add('show');
-        setTimeout(() => selectors.toast.classList.remove('show'), 2000);
-    }
-
-    // Transição suave ao trocar de aba
     function animateMainTransition() {
         const main = document.querySelector('main');
         main.style.opacity = 0;
@@ -393,7 +408,6 @@ document.addEventListener('DOMContentLoaded', function () {
             main.style.transform = 'translateY(0) scale(1)';
         }, 50);
     }
-
-    // Inicializa a renderização dos materiais
+    
     renderMaterials();
 });
