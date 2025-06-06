@@ -1,13 +1,31 @@
 /* === Base === */
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: var(--body-bg, #232326);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
-    font-size: 1.15rem;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--body-bg, #232326);
     color: var(--body-color, #f4f4f5);
+    font-size: 1.15rem;
     transition: background 0.3s, color 0.3s;
+}
+
+main {
+    width: 100%;
+    max-width: 850px;
+    margin: 2rem auto;
+    background: var(--main-bg, #1f2937);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(24,24,27,0.18);
+    padding: 1.5rem 1rem;
+    animation: fadeIn 1.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .fade-in {
@@ -198,7 +216,7 @@ input[type="text"]:focus, input[type="file"]:focus, input[type="password"]:focus
 table {
     width: 100%;
     border-collapse: collapse;
-    background: #1f2937;
+    background: var(--main-bg, #1f2937); 
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(24,24,27,0.10);
@@ -211,17 +229,15 @@ th, td {
 }
 
 th {
-    background: #232326;
-    color: #f43f5e;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    background: var(--header-bg, #232326);
+    color: var(--h2-color, #f4f4f5);
 }
-
 tr:nth-child(even) {
-    background: #1e293b;
+    background: var(--table-row-bg, #1e293b);
 }
 
 tr {
+    background: var(--main-bg, #1f2937); 
     transition: background 0.18s;
 }
 
@@ -246,7 +262,7 @@ tr:hover td {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #1f2937, #111827);
+    background: #232326; 
     padding: 1rem;
 }
 
@@ -255,13 +271,14 @@ tr:hover td {
     flex-direction: column;
     max-width: 400px;
     width: 100%;
-    background: #232326;
+    background: #232326; 
     border-radius: 16px;
     padding: 2.5rem 2rem 2rem 2rem;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-    border: 1px solid #374151;
+    border: none;
     animation: fadeIn 0.8s;
 }
+
 
 #loginScreen h2 {
     text-align: center;
@@ -330,7 +347,6 @@ tr:hover td {
     animation: fadeIn 0.3s;
 }
 
-/* === Responsividade === */
 @media (max-width: 500px) {
     #loginScreen .login-card {
         padding: 1.5rem;
@@ -350,7 +366,6 @@ tr:hover td {
     }
 }
 
-/* === Variáveis de Tema === */
 :root {
     --body-bg: #232326;
     --body-color: #f4f4f5;
@@ -358,6 +373,7 @@ tr:hover td {
     --header-color: #f4f4f5;
     --main-bg: #1f2937;
     --h2-color: #f4f4f5;
+    --table-row-bg: #1e293b;
 }
 .light-theme {
     --body-bg: #f4f4f5;
@@ -366,17 +382,16 @@ tr:hover td {
     --header-color: #232326;
     --main-bg: #fff;
     --h2-color: #b91c1c;
+    --table-row-bg: #f3f4f6;
 }
-/* Limita e quebra o texto da coluna Nome */
 td:nth-child(2) {
-    max-width: 420px;      /* ajuste conforme o layout desejado */
-    white-space: pre-line; /* permite quebra de linha */
+    max-width: 420px;      
+    white-space: pre-line; 
     word-break: break-word;
     overflow-wrap: break-word;
     vertical-align: top;
 }
 
-/* Responsividade para telas menores */
 @media (max-width: 700px) {
     td:nth-child(2) {
         max-width: 180px;
@@ -388,4 +403,64 @@ td:nth-child(2) {
     main {
         padding: 0.5rem;
     }
+}
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    border: 0 !important;
+}
+
+@media (max-width: 600px) {
+    #materialForm {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    #materialForm input, #materialForm button {
+        width: 100%;
+        font-size: 1rem;
+    }
+}
+
+#toast, .show-toast {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-30px);
+    min-width: 220px;
+    max-width: 90vw;
+    background: #22c55e;
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 4px 24px rgba(24,24,27,0.18);
+}
+.show-toast.success {
+    background: #22c55e;
+}
+.show-toast.error {
+    background: #b91c1c;
+}
+#materialsTableBody td:nth-child(1), 
+#materialsTableBody th:nth-child(1) {
+    text-align: center;
+}
+#materialsTableBody td:not(:nth-child(1)),
+#materialsTableBody th:not(:nth-child(1)) {
+    text-align: left;
 }
