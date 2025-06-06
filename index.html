@@ -6,9 +6,7 @@
     <meta name="description" content="Sistema de Gestão de Materiais. Cadastro, controle, solicitações e requisições de materiais.">
     <link rel="icon" href="favicon.png">
     <title>Gestão de Materiais</title>
-    <!-- filepath: c:\Users\matheus.ferreira\Downloads\montagem\web-materials-app\web-materials-app\src\index.html -->
-<!-- ...existing code... -->
-<link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">Please find a solution for this failing job. Use the logs, job definition, and any referenced files where the failure occurred. Keep your response focused on the solution and include code suggestions when appropriate.
 </head>
 <body>
 
@@ -39,6 +37,16 @@
             <button id="materialRequestBtn">📦 Requisições de Materiais</button>
             <button id="materialRegisterBtn">➕ Cadastro de Materiais</button>
         </div>
+        <!-- Formulário acessível para adicionar material -->
+<form id="materialForm">
+  <label for="materialCode" class="sr-only">Código do Material</label>
+  <input type="text" id="materialCode" placeholder="Código" required autocomplete="off" />
+
+  <label for="materialName" class="sr-only">Nome do Material</label>
+  <input type="text" id="materialName" placeholder="Nome" required autocomplete="off" />
+
+  <button type="submit" id="addBtn">Adicionar</button>
+</form>
     </section>
 
     <!-- Cadastro de Materiais -->
